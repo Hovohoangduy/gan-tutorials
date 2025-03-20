@@ -21,14 +21,13 @@ nc = 3 # number of channels in the images
 nz = 10 # size of z latent vector (size of generator input)
 ngf = 64 # size of feature maps in generator
 ndf = 64 # size of feature maps in discriminator
-num_epochs = 10
+num_epochs = 30
 lr = 0.0002
 beta1 = 0.5 # beta1 hyperparameter for Adam optimizers
 ngpu = 1 # number of GPUs availiable
 
 transform = transforms.Compose([
     transforms.Resize(image_size),
-    transforms.CenterCrop(image_size),
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
@@ -170,7 +169,7 @@ for epoch in range(num_epochs):
         optimizerD.step()
         # (2) update G network: maximize log(D(G(z)))
         netG.zero_grad()
-        label.fill_(fake_label)
+        label.fill_(real_label)
         output = netD(fake).view(-1)
         errG = criterion(output, label)
         errG.backward()
